@@ -287,6 +287,7 @@ class Pawn extends Piece {
   
   
   void pawnCheck(PVector inIndex, boolean inIsWhite){
+    //HEIIIIIII
     PVector[] tempVecs = new PVector[2]; /////////////////////////////TURN THIS ALL INTO A FOR LOOP OVER THIS ARRAY STOP BEING SPAGETTI RAZ//////////////////////////
     PVector tempVecLeft = new PVector(inIndex.x - 1, inIndex.y - 1);
     PVector tempVecRight = new PVector(inIndex.x +1, inIndex.y - 1);
