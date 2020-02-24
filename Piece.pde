@@ -131,21 +131,6 @@ class Piece {
 
 
 
-  void removeMoveLoc(PVector rVec) {
-    for (int i = 0; i < moveLocs.size(); i++) {
-      PVector p = moveLocs.get(i);
-      if (p.x == rVec.x && p.y == rVec.y ) {
-        moveLocs.remove(i);
-        println("REMOVED" + i);
-        i--;
-      }
-    }
-  }
-
-
-
-
-
 
 
 
@@ -156,11 +141,10 @@ class Piece {
 
   void addLocRec(PVector inIndex, PVector addVector) {
     PVector tempVec = new PVector(inIndex.x + addVector.x, inIndex.y + addVector.y);
-    println(tempVec);
     if (tempVec.y >= 0 && tempVec.y < 8 && tempVec.x >= 0 && tempVec.x < 8) {
-      println("Ticked if");
       int colorHolder = gameBoard.grid[floor(tempVec.x)][floor(tempVec.y)].pieceColor;
-      println(colorHolder);
+
+      //These if statements make sure a black piece can't overlap another black piece
       if (this.isWhite && colorHolder == 2) {
         moveLocs.add(tempVec);
       } 
@@ -169,20 +153,21 @@ class Piece {
       }
       if (colorHolder == 0) {
         moveLocs.add(tempVec);
-        addLocRec(tempVec, addVector);
+        addLocRec(tempVec, addVector); //Keep adding locations if there is an empty square in the current direction.
       }
     }
   }
 
 
-  void addLoc(PVector inIndex, PVector addVector) {
+  void addLoc(PVector inIndex, PVector addVector) { 
+    //Method to add a location
     PVector tempVec = new PVector(inIndex.x + addVector.x, inIndex.y + addVector.y);
-    println(tempVec);
     if (tempVec.y >= 0 && tempVec.y < 8 && tempVec.x >= 0 && tempVec.x < 8) {
-      //println("Ticked if");
       int colorHolder = gameBoard.grid[floor(tempVec.x)][floor(tempVec.y)].pieceColor;
-      println(colorHolder);
-      if (this.isWhite && colorHolder == 2) {
+
+      //These if statements make sure a black piece can't overlap another black piece
+
+      if (this.isWhite && colorHolder == 2) { 
         moveLocs.add(tempVec);
       } 
       if (this.isWhite == false && colorHolder == 1) {
@@ -196,57 +181,9 @@ class Piece {
 
 
 
-  //void addUp(PVector inIndex) {
-  //  PVector tempVec = new PVector(inIndex.x, inIndex.y - 1);
-
-  //  if (tempVec.y >= 0) {
-  //    int colorHolder = gameBoard.grid[floor(tempVec.x)][floor(tempVec.y)].pieceColor;
-  //   // println(colorHolder);
-  //    if (this.isWhite && colorHolder == 2) {
-  //      moveLocs.add(tempVec);
-  //    } 
-  //    if (this.isWhite == false && colorHolder == 1) {
-  //      moveLocs.add(tempVec);
-  //    }
-  //    if (colorHolder == 0) {
-  //      moveLocs.add(tempVec);
-  //      addUp(tempVec);
-  //    }
-  //  }
-  //}
 
 
-
-
-
-
-
-  //void addDown(PVector inIndex) {
-  //  PVector tempVec = new PVector(inIndex.x, inIndex.y + 1);
-  //  if (tempVec.y < 7) {
-  //    int colorHolder = gameBoard.grid[floor(tempVec.x)][floor(tempVec.y)].pieceColor;
-  //    println(colorHolder);
-  //    if (this.isWhite && colorHolder == 2) {
-  //      moveLocs.add(tempVec);
-  //    } 
-  //    if (this.isWhite == false && colorHolder == 1) {
-  //      moveLocs.add(tempVec);
-  //    }
-  //    if (colorHolder == 0) {
-  //      moveLocs.add(tempVec);
-  //      addDown(tempVec);
-  //    }
-  //  }
-  //}
-
-
-
-
-
-
-
-
-  void makeMoveList() {
+  void makeMoveList() { //Here because inheritance was being annoying
   }
 
 
@@ -279,7 +216,7 @@ class Pawn extends Piece {
 
   void makeMoveList() {
     moveLocs.clear();
-    if (!pawnCheck(this.pIndex)) {
+    if (!pawnCheck(this.pIndex) && !pieceInFront()) { //
       addLoc(this.pIndex, new PVector(0, - 1 * colorOffset));
       if (firstMove) {
         addLoc(this.pIndex, new PVector(0, - 2 * colorOffset));
@@ -288,32 +225,48 @@ class Pawn extends Piece {
   }
 
 
-  boolean pawnCheck(PVector inIndex) {
-    PVector[] tempVecs = new PVector[2];// 0 - left 1 - right /////////////////////////////TURN THIS ALL INTO A FOR LOOP OVER THIS ARRAY STOP BEING SPAGETTI RAZ//////////////////////////
+  boolean pawnCheck(PVector inIndex) { //Will return true if there is a piece in one of the diags, and false if there isn't. If there is a piece it will add it to the possible move lists.
+    PVector[] tempVecs = new PVector[2];// 0 - left 1 - right
     int emptyCounter = 0;
-    tempVecs[0] = new PVector(inIndex.x - 1, inIndex.y - 1 * colorOffset);
-    tempVecs[1] = new PVector(inIndex.x + 1, inIndex.y - 1 * colorOffset);
-    for (int i = 0; i < tempVecs.length; i++) {
+    boolean hitBound = false;
+    tempVecs[0] = new PVector(inIndex.x - 1, inIndex.y - 1 * colorOffset); // Left Diag
+    tempVecs[1] = new PVector(inIndex.x + 1, inIndex.y - 1 * colorOffset); // Right Diag
+    for (int i = 0; i < tempVecs.length; i++) { // Loops through all of the pieces and does the code to check if it can take the piece
       if (tempVecs[i].y >= 0 && tempVecs[i].y < 8 && tempVecs[i].x >= 0 && tempVecs[i].x < 8) {
 
         int colorHolder = gameBoard.grid[floor(tempVecs[i].x)][floor(tempVecs[i].y)].pieceColor;
-        //println(colorHolder);
         if (this.isWhite && colorHolder == 2) {
           moveLocs.add(tempVecs[i]);
         } 
         if (this.isWhite == false && colorHolder == 1) {
           moveLocs.add(tempVecs[i]);
         }
-        if (colorHolder == 0) {
+        if (colorHolder == 0) { //Counter in place to make sure all cases are caught
           emptyCounter++;
         }
+      } else {
+        hitBound = true;
       }
     }
-    
-    if(emptyCounter > 1){
+
+    if (emptyCounter > 1 || (hitBound && emptyCounter > 0)) {
       return false;
     }
     return true;
+  }
+
+
+
+  boolean pieceInFront() {
+
+    int colorHolder = gameBoard.grid[floor(pIndex.x)][floor(pIndex.y) - 1 * colorOffset].pieceColor;
+    if (this.isWhite && colorHolder == 2) {
+      return true;
+    } 
+    if (this.isWhite == false && colorHolder == 1) {
+      return true;
+    }
+    return false;
   }
 }
 
