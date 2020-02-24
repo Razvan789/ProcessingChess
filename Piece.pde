@@ -216,7 +216,9 @@ class Pawn extends Piece {
 
   void makeMoveList() {
     moveLocs.clear();
-    if (!pawnCheck(this.pIndex) && !pieceInFront()) { //
+    pawnCheck(this.pIndex);
+    if ( !pieceInFront()) { //
+
       addLoc(this.pIndex, new PVector(0, - 1 * colorOffset));
       if (firstMove) {
         addLoc(this.pIndex, new PVector(0, - 2 * colorOffset));
@@ -258,13 +260,15 @@ class Pawn extends Piece {
 
 
   boolean pieceInFront() {
+    if (pIndex.y > 0 && pIndex.y < 8 && pIndex.x >= 0 && pIndex.x < 8) {
 
-    int colorHolder = gameBoard.grid[floor(pIndex.x)][floor(pIndex.y) - 1 * colorOffset].pieceColor;
-    if (this.isWhite && colorHolder == 2) {
-      return true;
-    } 
-    if (this.isWhite == false && colorHolder == 1) {
-      return true;
+      int colorHolder = gameBoard.grid[floor(pIndex.x)][floor(pIndex.y) - 1 * colorOffset].pieceColor;
+      if (this.isWhite && colorHolder == 2) {
+        return true;
+      } 
+      if (this.isWhite == false && colorHolder == 1) {
+        return true;
+      }
     }
     return false;
   }
