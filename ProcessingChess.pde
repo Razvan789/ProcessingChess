@@ -6,6 +6,7 @@ boolean whiteTurn = true; //true = White false = Black
 boolean debugMode = false;
 int turnCount = 0;
 boolean gameOver = false;
+///TestmyGit
 void setup() {
   size(800, 800);
   imageMode(CENTER);
