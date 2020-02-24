@@ -1,3 +1,5 @@
+
+///Need to add pawn reaching the end 
 int cellSize;
 Board gameBoard;
 Player playerWhite;
