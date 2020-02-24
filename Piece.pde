@@ -173,9 +173,9 @@ class Piece {
       }
     }
   }
-  
-  
-  void addLoc(PVector inIndex, PVector addVector){
+
+
+  void addLoc(PVector inIndex, PVector addVector) {
     PVector tempVec = new PVector(inIndex.x + addVector.x, inIndex.y + addVector.y);
     println(tempVec);
     if (tempVec.y >= 0 && tempVec.y < 8 && tempVec.x >= 0 && tempVec.x < 8) {
@@ -193,7 +193,7 @@ class Piece {
       }
     }
   }
-  
+
 
 
   //void addUp(PVector inIndex) {
@@ -279,24 +279,41 @@ class Pawn extends Piece {
 
   void makeMoveList() {
     moveLocs.clear();
-    pawnCheck();
-    if (firstMove) {
-      addLoc(this.pIndex, new PVector(0,- 2 * colorOffset));
+    if (!pawnCheck(this.pIndex)) {
+      addLoc(this.pIndex, new PVector(0, - 1 * colorOffset));
+      if (firstMove) {
+        addLoc(this.pIndex, new PVector(0, - 2 * colorOffset));
+      }
     }
   }
-  
-  
-  void pawnCheck(PVector inIndex, boolean inIsWhite){
-    //HEIIIIIII
-    PVector[] tempVecs = new PVector[2]; /////////////////////////////TURN THIS ALL INTO A FOR LOOP OVER THIS ARRAY STOP BEING SPAGETTI RAZ//////////////////////////
-    PVector tempVecLeft = new PVector(inIndex.x - 1, inIndex.y - 1);
-    PVector tempVecRight = new PVector(inIndex.x +1, inIndex.y - 1);
-    if (tempVecLeft.y >= 0 && tempVecLeft.y < 8 && tempVecLeft.x >= 0 && tempVecRight.x < 8) {
-      //println("Ticked if");
-      int colorHolderLeft = gameBoard.grid[floor(tempVecLeft.x)][floor(tempVecLeft.y)].pieceColor;
-      int colorHolderright = gameBoard.grid[floor(tempVecRight.x)][floor(tempVecRight.y)].pieceColor;
-      
+
+
+  boolean pawnCheck(PVector inIndex) {
+    PVector[] tempVecs = new PVector[2];// 0 - left 1 - right /////////////////////////////TURN THIS ALL INTO A FOR LOOP OVER THIS ARRAY STOP BEING SPAGETTI RAZ//////////////////////////
+    int emptyCounter = 0;
+    tempVecs[0] = new PVector(inIndex.x - 1, inIndex.y - 1 * colorOffset);
+    tempVecs[1] = new PVector(inIndex.x + 1, inIndex.y - 1 * colorOffset);
+    for (int i = 0; i < tempVecs.length; i++) {
+      if (tempVecs[i].y >= 0 && tempVecs[i].y < 8 && tempVecs[i].x >= 0 && tempVecs[i].x < 8) {
+
+        int colorHolder = gameBoard.grid[floor(tempVecs[i].x)][floor(tempVecs[i].y)].pieceColor;
+        //println(colorHolder);
+        if (this.isWhite && colorHolder == 2) {
+          moveLocs.add(tempVecs[i]);
+        } 
+        if (this.isWhite == false && colorHolder == 1) {
+          moveLocs.add(tempVecs[i]);
+        }
+        if (colorHolder == 0) {
+          emptyCounter++;
+        }
+      }
     }
+    
+    if(emptyCounter > 1){
+      return false;
+    }
+    return true;
   }
 }
 
@@ -358,9 +375,9 @@ class Knight extends Piece {
   void makeMoveList() {
     moveLocs.clear();
     for (int i = -1; i <= 1; i+= 2) {
-      addLoc(this.pIndex, new PVector(i,  i * 2));
+      addLoc(this.pIndex, new PVector(i, i * 2));
       addLoc(this.pIndex, new PVector(-i, i * 2));
-      addLoc(this.pIndex, new PVector(i*2,i   ));
+      addLoc(this.pIndex, new PVector(i*2, i   ));
       addLoc(this.pIndex, new PVector(i*2, -i));
     }
   }
@@ -382,9 +399,9 @@ class King extends Piece {
     moveLocs.clear();
     addLoc(this.pIndex, new PVector(0, -1));
     addLoc(this.pIndex, new PVector(1, -1));
-    addLoc(this.pIndex, new PVector(1,  0));
+    addLoc(this.pIndex, new PVector(1, 0));
     addLoc(this.pIndex, new PVector(-1, 1));
-    addLoc(this.pIndex, new PVector(1,  1));
+    addLoc(this.pIndex, new PVector(1, 1));
     addLoc(this.pIndex, new PVector(0, 1));
     addLoc(this.pIndex, new PVector(-1, 0));
     addLoc(this.pIndex, new PVector(-1, -1));
