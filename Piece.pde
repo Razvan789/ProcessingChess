@@ -3,7 +3,7 @@ class Piece {
   PVector loc, pIndex, oldLoc;
   boolean isWhite;
   boolean atEnd;
-  int colorOffset = 1; // White is 1, Black is -1 
+  int colorOffset = 1; /// White is 1, Black is -1 
   boolean moving = false;
   boolean firstMove = true;
   ArrayList<PVector> moveLocs;
