@@ -33,6 +33,11 @@ class Player {
     for (int i = 0; i < pieces.length; i++) {
       pieces[i].show();
     }
+    for(int i = 8; i< 16; i++){
+      if(pieces[i].atEnd){
+        pieces[i] = new Queen(pieces[i].pIndex.x,pieces[i].pIndex.y, pieces[i].isWhite);
+      }
+    }
   }
 
 

@@ -2,6 +2,7 @@ class Piece {
   PImage pPic;
   PVector loc, pIndex, oldLoc;
   boolean isWhite;
+  boolean atEnd;
   int colorOffset = 1; // White is 1, Black is -1 
   boolean moving = false;
   boolean firstMove = true;
@@ -209,8 +210,10 @@ class Piece {
 //////////////////////////////////////////////////////////Pawn//////////////////////////////////////////////////////////////////////
 
 class Pawn extends Piece {
+  //boolean atEnd;
   Pawn(float xPos, float yPos, boolean inIsWhite) {
     super(xPos, yPos, "_Pawn.png", inIsWhite);
+    atEnd = pawnEnd();
     makeMoveList();
   }
 
@@ -227,7 +230,9 @@ class Pawn extends Piece {
   }
 
 
-  boolean pawnCheck(PVector inIndex) { //Will return true if there is a piece in one of the diags, and false if there isn't. If there is a piece it will add it to the possible move lists.
+  boolean pawnCheck(PVector inIndex) { 
+    //Will return true if there is a piece in one of the diags, and false if there isn't. If there is a piece it will add it to the possible move lists.
+    atEnd = pawnEnd();
     PVector[] tempVecs = new PVector[2];// 0 - left 1 - right
     int emptyCounter = 0;
     boolean hitBound = false;
@@ -259,8 +264,22 @@ class Pawn extends Piece {
 
 
 
+  boolean pawnEnd(){
+    if(isWhite){
+      if(pIndex.y == 0){
+        return true;
+      }
+    } else {
+      if(pIndex.y == 7){
+        return true;
+      }
+    }
+    return false;
+  }
+
+
   boolean pieceInFront() {
-    if (pIndex.y > 0 && pIndex.y < 8 && pIndex.x >= 0 && pIndex.x < 8) {
+    if (pIndex.y > 0 && pIndex.y < 7 && pIndex.x >= 0 && pIndex.x < 8) {
 
       int colorHolder = gameBoard.grid[floor(pIndex.x)][floor(pIndex.y) - 1 * colorOffset].pieceColor;
       if (this.isWhite && colorHolder == 2) {
